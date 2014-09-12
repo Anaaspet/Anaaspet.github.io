@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+    <!--<link href="bootstrap/css/bootstrap.css" rel="stylesheet"> -->
+
+	<!-- Yoda favicon? -->
+	
+	<style>
+
+		.vertBar {
+			height:150px;
+			z-index:1;
+			align-content: flex-end;
+		}
+
+		.circle {
+			width: 80px;
+			height: 80px; 
+			border-radius: 50%; 
+			z-index:1; 
+			margin-bottom: 3%;
+			text-align: right;
+			}
+
+		.bigCircle {
+			width: 150px;
+			height: 150px; 
+			border-radius: 50%; 
+			z-index:1; 
+			margin-bottom: 3%;
+		}
+			
+		.picOfMe {
+			margin-left: 5%;
+			margin-top: 5%;
+			overflow: hidden;
+		}
+
+		.me {
+			background: #FF4E50;
+			margin-left: 20%;
+		}
+		
+		.about {
+			background: #EDE574;
+			margin-left: 35%;
+		}
+		
+		.projects {
+			background: #74b01e; /*#e1f5c4 */ 
+			margin-left: 50%;
+		}
+
+		html, body, {
+	    	height: 100%;
+	    	margin: 0;
+	    	padding: 0;
+		}
+
+		#main-div-andy {
+		    position:absolute;
+		    top:0;
+		    bottom:0;
+		    left:0;
+		    right:0;
+		    overflow:hidden;
+		    z-index:-1;
+		    width:1000px; 
+		    margin:0 auto; 
+		    height: 100%; 
+		}
+		
+	</style>
+    <title>Andrew Iovanna</title>
+  </head>
+  <body>
+	<div id="main-div-andy"> <!--Chop off left and right border--> 
+		<div class="vertBar"> 
+			<div class="bigCircle picOfMe">
+				<img src="images/mePicTiny.png">
+				<div style="padding-left:200px;"> Andrew Iovanna
+				</div>
+			</div>
+		</div> 
+
+		<div class="vertBar">
+			<div class="circle me">
+				<div style="padding-left:200px;"> About Me
+				</div>
+			</div>
+		</div>
+
+		<div class="vertBar">
+			<div class="circle about">
+				<div style="padding-left:200px;"> Projects
+				</div>
+			</div>
+		</div>
+
+		<div class="vertBar">
+			<div class="circle projects">
+				<div style="padding-left:200px;"> Resume
+				</div>
+			</div>
+		</div>
+	</div>
+  </body>
+</html>
