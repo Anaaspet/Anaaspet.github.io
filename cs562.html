@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+	<title>CS 562: Test Harness</title>
+	<style>
+		body { 
+			margin: 0; /* This is used to reset any browser-default margins */ 
+		}
+		
+		.left {
+			width: 25%;
+			height: 100vh;
+			background-color: #BFBB7E;
+			font-family: avenir, "freight-sans-pro", sans-serif;
+			float: left;
+		}
+		
+		.mid {
+			width: 50%;
+			height: 100vh;
+			background-color: #EA9F3A;
+			font-family: avenir, "freight-sans-pro", sans-serif;
+			float: left;
+		}
+		
+		.right {
+			width: 25%;
+			height: 100vh;
+			background-color: #B98F69;
+			font-family: avenir, "freight-sans-pro", sans-serif;
+			float: left;
+		}
+		
+		h1 {
+			margin: 0;
+			color: white;
+			font-weight: 400;
+			font-size: 47px;
+			
+		}
+		
+		h2 {
+			color: gray;
+			margin: 0;
+		}
+		
+		.padding {
+			width: 100%;
+			height: 100%;
+			margin-top: 15px;
+			margin-left: 15px;
+
+		}
+		
+		.addTestButton {
+			width: 50%;
+			height: 100px;
+			color: white;
+			text-align: center;
+		}
+		
+		.addTestButton:hover {
+			background-color: gray;
+		}
+		
+		.test {
+			height: 110px;
+			width: inherit;
+			padding-bottom: 15px;
+		}
+		
+		.testList {
+			width: 100%;
+			height: 100%;
+		}
+		
+	</style>
+    <title>Andrew Iovanna</title>
+  </head>
+  <body>
+  	<div class="left">
+  		<div class="padding">
+	  		<h1> Andrew Iovanna</h1>
+	  		<h2> Test Harness</h2>
+	  		<button onclick="initialize()">Initialize</button>
+	  		<button onclick="re-initialize()">Re-Init</button>
+	  		<button onclick="runTests()">Run</button>
+	  		<select id="testSelection">
+	  		  <option>All</option>
+	  		  <option>New</option>
+	  		  <option>Failed</option>
+	  		  <option>Passed</option>
+	  		  <option>Unclassified</option>
+	  		  <option>Checked</option> <!--Checkbox with each test in test list --> 
+	  		</select>
+  		</div>
+  	</div>
+  	
+  	<div class="mid">
+		<div id="addTestButtonID" class="addTestButton" onclick="addTest()">
+			<h1 id="addTest" style="padding-top: 20px;">
+				Add Test
+			</h1>
+		</div>
+
+		<div id="testsList" class="testList">
+		</div>
+  	</div>
+  	
+  	<div class="right">
+	  	<div class="padding">
+	  	</div>
+  	</div>
+  
+
+  <script>
+  var tests = []; 
+  var passedTests = [];
+  var failedTests = [];
+  var unclassifiedTests = [];
+  var newTests = []; 
+  
+  function TestObj () {
+  	this.testNum = numTests + 1; 
+  	this.testHistory;
+  	this.stats;
+  	this.returnValue = true;
+  	this.lastResult = "None"; 
+  	this.type = "New"; 
+  }
+  
+  var numTests = 0; 
+  	function addTest() {
+  		var thisTest = new TestObj(); 
+		var test = document.createElement("div"); 
+		test.className = test.className + "test";
+		test.innerHTML = "Test #: " + (numTests +1) + "<br>"; 
+		
+		//Make history div
+		var testHistory = document.createElement("div"); 
+		testHistory.innerHTML = "History: None<br>"; 
+		//End history div
+		
+		//Make stats div
+		var stats = document.createElement("div");
+		stats.innerHTML = "Stats: "; 
+		stats.style.cssFloat = "left"; 
+		stats.style.width="100%";
+		var statsResult = document.createElement("div");
+		statsResult.innerHTML = "None";
+		statsResult.style.color ="red"; 
+		statsResult.style.cssFloat = "left";
+		//stats.appendChild(statsResult);
+		//End stats div
+		
+		//Make return value div
+		var returnValue = document.createElement("div");
+		returnValue.innerHTML = "Returns: True"; 
+		//End return value div
+		
+		//Make last result div
+		var lastResult = document.createElement("div");
+		lastResult.innerHTML = "Last Result: None"; 
+		//End last result div
+		
+		//Make type div
+		var testType = document.createElement("div");
+		testType.innerHTML = "New"; 
+		//End type div 
+		
+		//Append all inner divs to outer test div 
+		test.appendChild(testHistory);
+		test.appendChild(stats);
+		test.appendChild(statsResult); 
+		test.appendChild(returnValue);
+		test.appendChild(lastResult);
+		test.appendChild(testType);
+		
+		var element = document.getElementById("testsList");
+		element.appendChild(test);  
+		
+		numTests++; 
+		
+		newTests[newTests.length] = thisTest; 
+		tests[tests.length] = thisTest; 	
+		}
+		
+	function runTests() {
+		var e = document.getElementById("testSelection");
+		var testType = e.options[e.selectedIndex].text;
+		
+		switch(testType) {
+		case "All":
+			console.log("All"); 
+			break;
+			
+		case "New":
+			console.log("New"); 
+			break; 
+		
+		case "Passed":
+			console.log("Passed");
+			break;
+		
+		case "Failed":
+			console.log("Passed");
+			break;
+		
+		case "Unclassified":
+			console.log("Passed");
+			break;
+		
+		case "Checked":
+			console.log("Passed");
+			break;
+		
+		}
+	}
+		
+  </script>
+
+  
+  </body>
+</html>
