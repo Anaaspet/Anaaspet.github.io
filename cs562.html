@@ -290,8 +290,9 @@
 			var tests = document.getElementsByClassName("testWrapper");
 			for(var i = 0; i < tests.length; i++) {
 				var testDOM = tests[i];
-				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
-				if(testTypeResult.innerHTML === "Passed") {
+				var testTypeResult = testDOM.getElementsByClassName("lastResultColumn")[0].getElementsByClassName("lastResultResultClass")[0];
+				console.log(testTypeResult); 
+				if(testTypeResult.innerHTML === "Pass") {
 					testsToUpdate[testsToUpdate.length] = testDOM; 
 				}
 				
@@ -302,8 +303,9 @@
 			var tests = document.getElementsByClassName("testWrapper");
 			for(var i = 0; i < tests.length; i++) {
 				var testDOM = tests[i];
-				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
-				if(testTypeResult.innerHTML === "Failed") {
+				var testTypeResult = testDOM.getElementsByClassName("lastResultColumn")[0].getElementsByClassName("lastResultResultClass")[0];
+				console.log(testTypeResult); 
+				if(testTypeResult.innerHTML === "Fail") {
 					testsToUpdate[testsToUpdate.length] = testDOM; 
 				}
 				
@@ -334,6 +336,8 @@
 			}
 			break;
 		}
+		
+		console.log("Tests to update: " + testsToUpdate.length); 
 		
 		var passedTestsCount = 0; 
 		var failedTestsCount = 0; 
