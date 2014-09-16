@@ -56,7 +56,7 @@
 		}
 		
 		.addTestButton {
-			width: 50%;
+			width: 100%;
 			height: 100px;
 			color: white;
 			text-align: center;
@@ -66,15 +66,47 @@
 			background-color: gray;
 		}
 		
-		.test {
-			height: 110px;
-			width: inherit;
-			padding-bottom: 15px;
+		.testWrapper {
+			width: 100%;
+			height: 150px;
 		}
 		
 		.testList {
+			padding-top: 10px;
 			width: 100%;
 			height: 100%;
+			overflow-y:auto;
+		}
+		
+		.test {
+			width: 125px;
+			float: left;
+			padding-left: 10px;
+		}
+		
+		.testColumn {
+			width: 100px;
+			float: left;
+		}
+		
+		.historyColumn {
+			width: 100px;
+			float: left;	
+		}
+		
+		.returnColumn {
+			width: 100px;
+			float: left;
+		}
+		
+		.lastResultColumn {
+			width: 100px;
+			float: left;
+		}
+		
+		.testTypeColumn {
+			width: 100px;
+			float: left;
 		}
 		
 	</style>
@@ -86,7 +118,9 @@
 	  		<h1> Andrew Iovanna</h1>
 	  		<h2> Test Harness</h2>
 	  		<button onclick="initialize()">Initialize</button>
-	  		<button onclick="re-initialize()">Re-Init</button>
+	  		<button onclick="reInitialize()">Re-Init</button>
+	  		<br><br>
+	  		<h2> Run Tests</h2>
 	  		<button onclick="runTests()">Run</button>
 	  		<select id="testSelection">
 	  		  <option>All</option>
@@ -95,6 +129,14 @@
 	  		  <option>Passed</option>
 	  		  <option>Unclassified</option>
 	  		  <option>Checked</option> <!--Checkbox with each test in test list --> 
+	  		</select>
+	  		<br><br>
+	  		<h2> Classify Tests</h2>
+	  		<button onclick="classifyTests()">Classify</button>
+	  		<select id="classifySelection">
+	  		  <option>Failed</option>
+	  		  <option>Passed</option>
+	  		  <option>Unclassified</option>
 	  		</select>
   		</div>
   	</div>
@@ -112,69 +154,103 @@
   	
   	<div class="right">
 	  	<div class="padding">
+	  		<h1 style="text-align:center;"> Previous Run </h1>
+	  		<div>
+		  		<h2 style="float:left;"> Tests Run: </h2>
+		  		<h2 id="testsRun" style="width: 20px; height: 33px; padding-right:20px;"></h2>
+	  		</div>
+	  		
+	  		<div>
+		  		<h2 style="float:left;"> Tests Passed: </h2>
+		  		<h2 id="testsPassed" style="width: 20px; height: 33px; padding-right:20px;"></h2>
+	  		</div>
+	  		
+	  		<div>
+		  		<h2 style="float:left;"> Tests Failed: </h2>
+		  		<h2 id="testsFailed"></h2>
+	  		</div>
 	  	</div>
   	</div>
-  
-
+	
   <script>
+   
   var tests = []; 
   var passedTests = [];
   var failedTests = [];
   var unclassifiedTests = [];
   var newTests = []; 
   
-  function TestObj () {
-  	this.testNum = numTests + 1; 
-  	this.testHistory;
-  	this.stats;
-  	this.returnValue = true;
-  	this.lastResult = "None"; 
-  	this.type = "New"; 
-  }
-  
   var numTests = 0; 
   	function addTest() {
-  		var thisTest = new TestObj(); 
 		var test = document.createElement("div"); 
-		test.className = test.className + "test";
-		test.innerHTML = "Test #: " + (numTests +1) + "<br>"; 
+		test.className = test.className + "testWrapper";
+		test.testID = numTests +1; 
+		
+		var testContent = document.createElement("div");
+		testContent.className = "test"; 
+		testContent.innerHTML = "Test #: " + (numTests +1); 
+		
+		var testRadio = document.createElement("form");
+		var addHTML = '<form action=""><input type="radio" name="test" value="pass" checked >Pass<input type="radio" name="test" value="fail">Fail</form>'; 
+		testRadio.innerHTML = addHTML;
+		testContent.appendChild(testRadio); 
+		
+		var testCheck = document.createElement("form");
+		testCheck.className = "testCheckClass"; 
+		addHTML = '<form><input type="checkbox" name="Check" value="Check">Check Test</form>';
+		testCheck.innerHTML = addHTML; 
+		testContent.appendChild(testCheck);
 		
 		//Make history div
 		var testHistory = document.createElement("div"); 
-		testHistory.innerHTML = "History: None<br>"; 
+		testHistory.className = "historyColumn";
+		testHistory.innerHTML = "History:"; 
+		var historyResult = document.createElement("div");
+		historyResult.className = "historyResultClass";
+		historyResult.innerHTML = "";
+		historyResult.style.color = "red"; 
+		historyResult.style.maxWidth = "100px";
+		historyResult.style.maxHeight = "100px";
+		historyResult.style.height = "100px";
+		historyResult.style.overflow = "scroll";
+		testHistory.appendChild(historyResult);
 		//End history div
-		
-		//Make stats div
-		var stats = document.createElement("div");
-		stats.innerHTML = "Stats: "; 
-		stats.style.cssFloat = "left"; 
-		stats.style.width="100%";
-		var statsResult = document.createElement("div");
-		statsResult.innerHTML = "None";
-		statsResult.style.color ="red"; 
-		statsResult.style.cssFloat = "left";
-		//stats.appendChild(statsResult);
-		//End stats div
 		
 		//Make return value div
 		var returnValue = document.createElement("div");
-		returnValue.innerHTML = "Returns: True"; 
+		returnValue.className = "returnColumn";
+		returnValue.innerHTML = "Returns:"; 
+		var returnResult = document.createElement("div");
+		returnResult.className = "returnResultClass"; 
+		returnResult.innerHTML = "True";
+		returnResult.style.color = "green";
+		returnValue.appendChild(returnResult);
 		//End return value div
 		
 		//Make last result div
 		var lastResult = document.createElement("div");
-		lastResult.innerHTML = "Last Result: None"; 
+		lastResult.className = "lastResultColumn";
+		lastResult.innerHTML = "Last Result:"; 
+		var lastResultResult = document.createElement("div");
+		lastResultResult.className = "lastResultResultClass";
+		lastResultResult.innerHTML = "None";
+		lastResultResult.style.color = "red";
+		lastResult.appendChild(lastResultResult);
 		//End last result div
 		
 		//Make type div
 		var testType = document.createElement("div");
-		testType.innerHTML = "New"; 
+		testType.className = "testTypeColumn";
+		testType.innerHTML = "Classification:";
+		var testTypeResult = document.createElement("div");
+		testTypeResult.className = "testTypeResultClass"; 
+		testTypeResult.innerHTML = "New";
+		testType.appendChild(testTypeResult);  
 		//End type div 
 		
 		//Append all inner divs to outer test div 
+		test.appendChild(testContent);
 		test.appendChild(testHistory);
-		test.appendChild(stats);
-		test.appendChild(statsResult); 
 		test.appendChild(returnValue);
 		test.appendChild(lastResult);
 		test.appendChild(testType);
@@ -184,40 +260,231 @@
 		
 		numTests++; 
 		
-		newTests[newTests.length] = thisTest; 
-		tests[tests.length] = thisTest; 	
+		newTests[newTests.length] = test.testID; 
+		tests[tests.length] = test.testID; 	
+		testRadio.addEventListener("change", function(e) {changeReturnVal(e, returnResult, testTypeResult)}) 
 		}
 		
 	function runTests() {
 		var e = document.getElementById("testSelection");
 		var testType = e.options[e.selectedIndex].text;
-		
+		var testsToUpdate = [];
 		switch(testType) {
 		case "All":
-			console.log("All"); 
+			testsToUpdate = document.getElementsByClassName("testWrapper");
 			break;
 			
 		case "New":
-			console.log("New"); 
+			var tests = document.getElementsByClassName("testWrapper");
+			for(var i = 0; i < tests.length; i++) {
+				var testDOM = tests[i];
+				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
+				if(testTypeResult.innerHTML === "New") {
+					testsToUpdate[testsToUpdate.length] = testDOM; 
+				}
+				
+			}
 			break; 
 		
 		case "Passed":
-			console.log("Passed");
+			var tests = document.getElementsByClassName("testWrapper");
+			for(var i = 0; i < tests.length; i++) {
+				var testDOM = tests[i];
+				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
+				if(testTypeResult.innerHTML === "Passed") {
+					testsToUpdate[testsToUpdate.length] = testDOM; 
+				}
+				
+			} 
 			break;
 		
 		case "Failed":
-			console.log("Passed");
+			var tests = document.getElementsByClassName("testWrapper");
+			for(var i = 0; i < tests.length; i++) {
+				var testDOM = tests[i];
+				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
+				if(testTypeResult.innerHTML === "Failed") {
+					testsToUpdate[testsToUpdate.length] = testDOM; 
+				}
+				
+			}
 			break;
 		
 		case "Unclassified":
-			console.log("Passed");
+			var tests = document.getElementsByClassName("testWrapper");
+			for(var i = 0; i < tests.length; i++) {
+				var testDOM = tests[i];
+				var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
+				if(testTypeResult.innerHTML === "Unclassified") {
+					testsToUpdate[testsToUpdate.length] = testDOM; 
+				}
+				
+			}
 			break;
 		
 		case "Checked":
-			console.log("Passed");
+			var tests = document.getElementsByClassName("testWrapper");
+			for(var i = 0; i < tests.length; i++) {
+				var testDOM = tests[i];
+				var testTypeResult = testDOM.getElementsByClassName("test")[0].getElementsByClassName("testCheckClass")[0].getElementsByTagName("input")[0];
+				if(testTypeResult.checked === true) {
+					testsToUpdate[testsToUpdate.length] = testDOM; 
+				}
+				
+			}
 			break;
-		
 		}
+		
+		var passedTestsCount = 0; 
+		var failedTestsCount = 0; 
+		for(var i = 0; i < testsToUpdate.length; i++) {
+			var testDOM = testsToUpdate[i];
+			var historyResult = testDOM.getElementsByClassName("historyColumn")[0].getElementsByClassName("historyResultClass")[0];
+			var returnResult = testDOM.getElementsByClassName("returnColumn")[0].getElementsByClassName("returnResultClass")[0];
+			var lastResultResult = testDOM.getElementsByClassName("lastResultColumn")[0].getElementsByClassName("lastResultResultClass")[0];
+			var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];
+			
+			if(returnResult.innerHTML === "True") {
+				passedTestsCount = passedTestsCount + 1; 
+				//Add to passedTests, if it isn't already there.
+				if(passedTests.indexOf(testDOM.testID) > -1) {
+					
+				}
+				//
+				else {
+					passedTests[passedTests.length] = testDOM.testID; 
+				}
+				
+				var index = unclassifiedTests.indexOf(testDOM.testID);
+				if(index > -1) {
+					unclassifiedTests.splice(index, 1); 
+				}
+				
+				index = newTests.indexOf(testDOM.testID);
+				if(index > -1) {
+					newTests.splice(index, 1); 
+				}
+				
+				index = failedTests.indexOf(testDOM.testID);
+				if(index > -1) {
+					failedTests.splice(index, 1); 
+				}
+				
+				var historyAppendString = "P"; 
+				if((historyResult.childNodes.length + 1) % 8 == 0)
+				{
+					historyAppendString = historyAppendString + "<br>"; 
+				}
+				historyResult.innerHTML = historyAppendString.fontcolor("green") + historyResult.innerHTML; 
+				
+				lastResultResult.innerHTML = "Pass"; 
+				lastResultResult.style.color = "green"; 
+				
+				testTypeResult.innerHTML = "Passed";
+			}
+			
+			else {
+				failedTestsCount = failedTestsCount + 1; 
+				var historyAppendString = "F"; 
+				if((historyResult.childNodes.length + 1) % 8 == 0)
+				{
+					historyAppendString = historyAppendString + "<br>"; 
+				}
+				historyResult.innerHTML = historyAppendString.fontcolor("red") + historyResult.innerHTML; 
+				
+				lastResultResult.innerHTML = "Fail"; 
+				lastResultResult.style.color = "red"; 
+				
+				testTypeResult.innerHTML = "Failed"; 
+			}
+			
+			var testsRunDiv = document.getElementById("testsRun");
+			testsRunDiv.innerHTML = " " + testsToUpdate.length; 
+			testsRunDiv.removeAttribute('style');
+			testsRunDiv.style.color = "white";
+			
+			var testsPassedDiv = document.getElementById("testsPassed");
+			testsPassedDiv.innerHTML = " " + passedTestsCount; 
+			testsPassedDiv.removeAttribute('style');
+			testsPassedDiv.style.color = "green"; 
+			
+			var testsFailedDiv = document.getElementById("testsFailed");
+			testsFailedDiv.innerHTML = " " + failedTestsCount; 
+			testsFailedDiv.style.color = "red";
+		}
+	}	
+		
+	function reInitialize() {
+		//Set all to unclassified
+		var tests = document.getElementsByClassName("testWrapper");
+		for(var i = 0; i < tests.length; i++) {
+			var testDOM = tests[i];
+			var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];	
+			testTypeResult.innerHTML = "Unclassified"; 
+			
+			var historyResult = testDOM.getElementsByClassName("historyColumn")[0].getElementsByClassName("historyResultClass")[0];
+			historyResult.innerHTML = "";
+			
+			var lastResultResult = testDOM.getElementsByClassName("lastResultColumn")[0].getElementsByClassName("lastResultResultClass")[0];
+			lastResultResult.innerHTML = "";
+			}
+			
+		}
+	
+	function initialize() {
+		var testsList = document.getElementById("testsList");
+		testsList.innerHTML = ""; 
+	}
+	
+	function classifyTests() {
+		var e = document.getElementById("classifySelection");
+		var classifyType = e.options[e.selectedIndex].text;
+		var testsToUpdate = []; 
+		var tests = document.getElementsByClassName("testWrapper");
+		for(var i = 0; i < tests.length; i++) {
+			var testDOM = tests[i];
+			var testTypeResult = testDOM.getElementsByClassName("test")[0].getElementsByClassName("testCheckClass")[0].getElementsByTagName("input")[0];
+			if(testTypeResult.checked === true) {
+				testsToUpdate[testsToUpdate.length] = testDOM; 
+			}
+			
+		}
+		
+		var changeToString; 
+		switch(classifyType) {
+			case "Failed":
+				changeToString = "Failed";
+			break;
+			
+			case "Passed":
+				changeToString = "Passed"; 
+			break;
+			
+			case "Unclassified": 
+				changeToString = "Unclassified"; 
+			break; 
+		}
+		
+		for(var i = 0; i < testsToUpdate.length; i++) {
+			var testDOM = testsToUpdate[i];
+			var testTypeResult = testDOM.getElementsByClassName("testTypeColumn")[0].getElementsByClassName("testTypeResultClass")[0];	
+			testTypeResult.innerHTML = changeToString; 	
+		}
+	}
+	
+	function changeReturnVal(e, returnToChange, classification) {
+		var setTo = e.target.defaultValue; 
+		if(setTo === "fail") {
+			returnToChange.innerHTML = "False";
+			returnToChange.style.color = "red";
+		}
+		
+		else {
+			returnToChange.innerHTML = "True";
+			returnToChange.style.color = "green";
+		}
+		
+		classification.innerHTML = "Unclassified"; 
 	}
 		
   </script>
