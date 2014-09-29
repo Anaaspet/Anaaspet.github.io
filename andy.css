@@ -20,6 +20,8 @@ html {
 	opacity: .8;
 	background-color: black; /* #EA9F3A */
 	font-family: avenir, "freight-sans-pro", sans-serif;
+	/*overflow: hidden; */
+	min-width: 25%;
 }
 
 h1 {
@@ -28,12 +30,30 @@ h1 {
 	font-weight: 400;
 	font-size: 47px;
 	padding-top: 5px;
+	min-width: 100%;
+	max-width: 100%;
 }
 
 .textDiv {
-	margin-left: 125px;
+	padding-left: 25%;
 	padding-top: 100px;
 	width: 450px;
+	min-width: 75%;
+	max-width: 75%;
+	display: inline-block;
+	overflow: scroll;
+}
+
+.textDiv h1 {
+    white-space: pre-line;
+}
+
+.textDiv h2 {
+    white-space: pre-line;
+}
+
+.textDiv h3 {
+    white-space: pre-line;
 }
 
 h2 {
@@ -77,10 +97,26 @@ h2 a {
 	
 }
 
+.floatList {
+    float: left;
+    margin: 0px 0px 0px 0px;
+    padding-left: 0px;
+    min-width: 25%;
+    display: inline-block;
+}
+
+.floatList li {
+    float: left;
+}
+
 a:link { color: #inherit;  } 
 a:visited { color: white;  } 
 a:hover { color: #inherit;  } 
 a:active { color: #inherit;  } 
+
+.breakword {
+    word-wrap: break-word;
+}
 /*Yoda favicon? 
 
 https://scontent-a-atl.xx.fbcdn.net/hphotos-xpf1/t31.0-8/1979185_10152087957767638_1566018366_o.jpg
